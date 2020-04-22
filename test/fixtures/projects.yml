@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  description: MyText
+  goal: MyText
+  start: 2020-04-22
+  deadline: 2020-04-22
+  public: false
+
+two:
+  name: MyString
+  description: MyText
+  goal: MyText
+  start: 2020-04-22
+  deadline: 2020-04-22
+  public: false
