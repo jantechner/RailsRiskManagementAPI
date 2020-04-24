@@ -1,10 +1,9 @@
 class UsersController < ApplicationController
   wrap_parameters :user
-  before_action :set_user, only: %i[show update destroy projects]
+  before_action :set_user, except: %i[index create]
 
   def index
-    @users = User.all
-    render json: @users
+    render json: User.all
   end
 
   def show
@@ -12,37 +11,42 @@ class UsersController < ApplicationController
   end
 
   def create
-    @user = User.create(user_params)
-    if @user
-      render json: @user, status: :accepted
-    else
-      render status: :bad_request
-    end
+    @user = User.create!(user_params)
+    render json: @user
+  rescue StandardError => e
+    render json: { error: e.messgae }, status: :internal_server_error
   end
 
   def update
-    if @user.update(user_params)
-      render json: @user, status: :accepted
-    else
-      render status: :bad_request
-    end
+    @user.update!(user_params)
+    render json: @user, status: :accepted
+  rescue StandardError => e
+    render json: { error: e.messgae }, status: :internal_server_error
   end
 
   def destroy
     @user.destroy
-    render json: {status: 'User deleted'}, status: :accepted
+    render status: :no_content
   end
 
   def projects
     render json: @user.projects
   end
 
+  def risk_registers
+    render json: @user.risk_registers
+  end
+
+  def risks
+    render json: @user.risks
+  end
+
   private
 
   def set_user
     @user = User.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    render json: {error: 'User not found'}, status: :not_found
+  rescue StandardError => e
+    render json: { error: e.message }, status: :not_found
   end
 
   def user_params

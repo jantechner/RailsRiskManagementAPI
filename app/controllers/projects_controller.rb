@@ -1,56 +1,54 @@
 class ProjectsController < ApplicationController
-  wrap_parameters format: :json
+  wrap_parameters :project
+  before_action :set_project, except: %i[index create]
 
   def index
-    @projects = Project.all
-    render json: @projects
+    render json: Project.all
   end
 
   def show
-    @project = Project.find(params[:id])
-    if @project
-      render json: @project, status: :ok
-    else
-      render status: :not_found
-    end
+    render json: @project
   end
 
   def create
-    @project = Project.new(params.require(:project).permit(:name, :description, :goal, :start, :deadline, :public))
-    if @project.save
-      render json: @project, status: :created
-    else
-      render status: :bad_request
-    end
+    @project = Project.create!(project_params)
+    render json: @project
+  rescue StandardError => e
+    render json: { error: e.message }, status: :internal_server_error
   end
 
   def update
-    logger.debug params
-    project = Project.find(params[:id])
-    if project
-      a = project_params
-      logger.debug a
-      project.update(project_params)
-      logger.debug "updated"
-      render json: project, status: :created
-    else
-      render status: :no_content
-    end
+    @project.update!(project_params)
+    render json: @project
+  rescue StandardError => e
+    render json: { error: e.message }, status: :internal_server_error
   end
 
   def destroy
-    project = Project.find(params[:id])
-    if project
-      project.destroy
-      render json: {status: 'Project deleted'}, status: :accepted
-    else
-      render status: :no_content
-    end
+    @project.destroy
+    render status: :no_content
+  end
+
+  def risks
+    render json: @project
   end
 
   private
 
+  def set_project
+    @project = Project.find(params[:id])
+  rescue StandardError => e
+    render json: { error: e.message }, status: :not_found
+  end
+
   def project_params
-    params.require(:project).permit(:name, :description, :goal, :start, :deadline, :public)
+    params.require(:project).permit(
+        :name,
+        :description,
+        :goal,
+        :start,
+        :deadline,
+        :public
+    )
   end
 end

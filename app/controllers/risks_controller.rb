@@ -4,8 +4,7 @@ class RisksController < ApplicationController
   before_action :set_risk, except: %i[index create]
 
   def index
-    @risks = @risk_register.risks
-    render json: @risks
+    render json: @risk_register.risks
   end
 
   def show
@@ -14,34 +13,35 @@ class RisksController < ApplicationController
 
   def create
     @risk = @risk_register.risks.create!(risk_params)
-    render json: @risk, status: :accepted
-  rescue ActiveRecord::RecordInvalid => e
-    render json: { error: e.message }, status: :bad_request
-  rescue StandardError
-    render json: { error: 'Server error' }, status: :internal_server_error
+    render json: @risk
+  rescue StandardError => e
+    render json: { error: e.message }, status: :internal_server_error
   end
 
   def update
-    if @risk.update!(risk_params)
-      render json: @risk, status: :accepted
-    else
-      render status: :bad_request
-    end
+    @risk.update!(risk_params)
+    render json: @risk
+  rescue StandardError => e
+    render json: { error: e.message }, status: :internal_server_error
   end
 
   def destroy
     @risk.destroy
-    render json: { status: 'Risk deleted' }, status: :accepted
+    render status: :no_content
   end
 
   private
 
   def set_risk_register
     @risk_register = RiskRegister.find(params[:risk_register_id])
+  rescue StandardError => e
+    render json: { error: e.message }, status: :bad_request
   end
 
   def set_risk
     @risk = Risk.find(params[:id])
+  rescue StandardError => e
+    render json: { error: e.message }, status: :bad_request
   end
 
   def risk_params
