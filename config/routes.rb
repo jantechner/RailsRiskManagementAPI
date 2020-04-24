@@ -1,16 +1,15 @@
 Rails.application.routes.draw do
-  # get 'risk_registers/index'
-  # get 'risk_registers/show'
-  # get 'risk_registers/create'
-  # get 'risk_registers/update'
-  # get 'risk_registers/delete'
-  # get 'project/index'
-  # get 'project/show'
-  # get 'project/create'
-  # get 'project/update'
-  # get 'project/destroy'
-  resources :projects do
-    resources :risk_registers
+  get 'risks/index'
+  get 'risks/show'
+  get 'risks/create'
+  get 'risks/update'
+  get 'risks/destroy'
+  resources :users, except: :new
+  resources :projects, shallow: true do
+    resources :risk_registers do
+      resources :risks
+    end
   end
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+
+  get 'users/:id/projects', action: :projects, controller: 'users'
 end

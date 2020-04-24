@@ -50,10 +50,12 @@ ActiveRecord::Schema.define(version: 2020_04_22_205622) do
     t.string "impact"
     t.string "severity"
     t.integer "owner_id", null: false
+    t.integer "risk_register_id", null: false
     t.string "status"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["owner_id"], name: "index_risks_on_owner_id"
+    t.index ["risk_register_id"], name: "index_risks_on_risk_register_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -66,5 +68,6 @@ ActiveRecord::Schema.define(version: 2020_04_22_205622) do
   add_foreign_key "actions", "risks"
   add_foreign_key "risk_registers", "projects"
   add_foreign_key "risk_registers", "users", column: "owner_id"
-  add_foreign_key "risks", "owners"
+  add_foreign_key "risks", "risk_registers"
+  add_foreign_key "risks", "users", column: "owner_id"
 end

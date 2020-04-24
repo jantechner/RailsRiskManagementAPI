@@ -1,7 +1,7 @@
 class RiskRegistersController < ApplicationController
   wrap_parameters format: :json
-  before_action :set_project
-  before_action :set_risk_register, only: %i[show update destroy]
+  before_action :set_project, only: %i[index create]
+  before_action :set_risk_register, except: %i[index create]
 
   def index
     @risk_registers = @project.risk_registers
@@ -13,12 +13,12 @@ class RiskRegistersController < ApplicationController
   end
 
   def create
-    @risk_register = @project.risk_registers.create(risk_register_params)
-    if @risk_register
-      render json: @risk_register, status: :accepted
-    else
-      render status: :bad_request
-    end
+    @risk_register = @project.risk_registers.create!(risk_register_params)
+    render json: @risk_register, status: :accepted
+  rescue ActiveRecord::RecordInvalid => e
+    render json: {error: e.message}, status: :bad_request
+  rescue StandardError
+    render json: { error: "Server error" }, status: :internal_server_error
   end
 
   def update
@@ -47,7 +47,7 @@ class RiskRegistersController < ApplicationController
 
   def set_risk_register
     begin
-      @risk_register = @project.risk_registers.find(params[:id])
+      @risk_register = RiskRegister.find(params[:id])
     rescue ActiveRecord::RecordNotFound
       render json: {error: "No risk register with given ID"}, status: :not_found
     end
