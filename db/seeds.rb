@@ -7,7 +7,7 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 User.create([
-        {name: 'Jan', surname: 'Kowalski'},
-        {name: 'Grzegorz', surname: 'Nowak'},
-        {name: 'Natalia', surname: 'Janowska'}
+                {name: 'Jan', surname: 'Kowalski'},
+                {name: 'Grzegorz', surname: 'Nowak'},
+                {name: 'Natalia', surname: 'Janowska'}
             ])
