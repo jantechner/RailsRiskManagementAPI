@@ -1,24 +1,22 @@
-# README
+# Risk Management Tool API
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Extended API for managing risk registers among many projects.  
 
-Things you may want to cover:
+This API was created as backend part of university project focusing
+on various aspects of project management and technologies of software
+development.
 
-* Ruby version
+#Installation 
 
-* System dependencies
+Download project and run 
 
-* Configuration
+```shell
+bundle install
+rails s
+``` 
 
-* Database creation
+#Features
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Todos API provides endpoints to performing CRUD actions on projects, risk
+registers and risks as well as users which are owners of the artefacts.
+ 
